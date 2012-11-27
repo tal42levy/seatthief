@@ -64,28 +64,21 @@ $(document).ready(function(){
 		var sec = $("#sects option:selected").attr("value");
 		var email = $("#email").val();
 		var phone = $("#phone").val();
-		phone = validatePhone(phone);
-		console.log(phone);
 		$(".alert").remove().end();
 		if (!validateEmail(email)){
 			$("#submit").removeAttr("disabled");
 			$("#email").after("<div class=\"alert\">" +
 				"Please enter a valid email address</div>");
-		} else if (!phone){
+		} else if (sec == 0) {
+			$("#sects").after("<div class=\"alert alert-warning\">Choose a section!</div>");
 			$("#submit").removeAttr("disabled");
-			$("#phone").after("<div class=\"alert\">Please enter a valid ten-digit phone number</div>");
 		} else {
 			var user = 0;
 			$.post("pyclasser/submit.php", {email: email, phone: phone}, function(ret){
-				console.log(ret);
 				user = parseInt(ret);
-				console.log(user);
 				if (sec != 0 && user) {
-					console.log("sect:" + sec);
 					$.post("pyclasser/submit.php", {department: department, course: course, section: sec, user:user}, function(retval){
-						console.log(retval);
 						if (retval == 0){
-							console.log("lol");
 							$("#submit").after("<div class=\"alert alert-success\">Alert created</div>");
 							//Alert was created. Handle
 						}

@@ -10,12 +10,12 @@ Rec = args[4]
 Sender = args[5]
 Message = open(args[6]).read()
 print SMTPServer
-serv = smtplib.SMTP(SMTPServer, 587)
+serv = smtplib.SMTP_SSL(SMTPServer, 465)
 serv.ehlo()
 if (serv.has_extn("STARTTLS")):
 		serv.starttls()
 serv.login(SMTPUser, SMTPPassword)
-header = 'To:' + Rec + '\n' + 'From: author@example.com \n'
+header = 'To:' + Rec + '\n' + 'From: ' + Sender + '\n' + 'From: ' + Sender + '\n'
 message = header + Message;
-serv.sendmail('author@example.com', Rec, message)
+serv.sendmail(Sender, Rec, message)
 serv.close()

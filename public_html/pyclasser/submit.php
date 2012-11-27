@@ -25,10 +25,10 @@
 		}
 		$email = $_REQUEST['email'];
 		if (!valid_phone($_REQUEST['phone'])){
-			echo 'phone0';
-			exit();
+			$phone = "1234567890";
+		} else {
+			$phone = $_REQUEST['phone'];
 		}
-		$phone = $_REQUEST['phone'];
 		$db = new PDO('sqlite:example.sqlite3');
 		$ret = find_user_id($db, $email);
 		if (count($ret) != 0){
