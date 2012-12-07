@@ -46,37 +46,37 @@
 	$sql = "SELECT
 							d.name, d.code as Department , d.id as d_id,
 							 c.code as Code, c.id as c_id, c.title as Title, c.units , c.desc, c.id asc_id
-						FROM  sections s, courses c, departments d
+						FROM courses c, departments d
 						WHERE
-						  c.id = s.course_id
-							AND d.id = c.department_id AND d.id = :id";
+							d.id = c.department_id AND d.id = :id";
  	$db = new PDO('sqlite:pyclasser/example.sqlite3');
 	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);	
 	$results = $db->prepare($sql);
 	$results->bindParam(':id', intval($_REQUEST['id']), PDO::PARAM_INT);
 	$results->execute();
+	$rows = $results->fetchAll();
 ?>
 	<div class="hero-unit">
+		<h3> Courses </h3>
+		<p>Showing all courses for <?php echo $rows[0]['Department'];?></p>
 			<table border="1" class="table">
 			<tr>
-				<th>Course code</th><th>Units</th><th>Title</th><th>Description</th>
-			</tr>
-			<?php
-				$rows = $results->fetchAll();
-				echo "<h3>Sections</h3><p>Displaying all sections for " . $rows[0]['Department'] . " ". $rows[0]['Code']. ": " . $rows[0]['Title'];
-				foreach ($rows as $currentrow){
-					echo "<tr>";
-					$res = $currentrow["Code"];
-					echo "<td><a href=course.php?id=" . $currentrow["c_id"] . ">"  . $res . "</a></td>";
-					$res = $currentrow["units"];
-					echo "<td>" . $res . "</td>";
-					$res = $currentrow["Title"];
-					echo "<td>" . $res . "</td>";
-					$res = $currentrow["desc"];
-					echo "<td>" . $res . "</td>";
-					echo "</tr>";
-				}
-			?>
+					<th>Course code</th><th>Units</th><th>Title</th><th>Description</th>
+				</tr>
+				<?php
+					foreach ($rows as $currentrow){
+						echo "<tr>";
+						$res = $currentrow["Code"];
+						echo "<td><a href=course.php?id=" . $currentrow["c_id"] . ">"  . $res . "</a></td>";
+						$res = $currentrow["units"];
+						echo "<td>" . $res . "</td>";
+						$res = $currentrow["Title"];
+						echo "<td>" . $res . "</td>";
+						$res = $currentrow["desc"];
+						echo "<td>" . $res . "</td>";
+						echo "</tr>";
+					}
+				?>
 			</table>	
 		</div>
 	</body>
