@@ -1,22 +1,7 @@
 <?php
-	function valid_email($email){
-		if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-			return true;
-		}
-		return false;
-	}
-
-	function valid_phone($phone){
-		return is_numeric($phone) && strlen($phone) == 10;
-	}
-
-	function find_user_id($db, $email){
-		$sql = $db->prepare('select user_id from users where email = :email');
-		$sql->execute(array(':email'=>$email));
-		$ret = $sql->fetchAll();
-		return $ret;
-
-	}
+	include "validation.php";
+	error_reporting(E_ALL);
+	ini_set('display_errors', 'On');
 
 	if (isset($_REQUEST['email']) && isset($_REQUEST['phone'])){
 		if (!valid_email($_REQUEST['email'])){
@@ -29,14 +14,14 @@
 		} else {
 			$phone = $_REQUEST['phone'];
 		}
-		$db = new PDO('sqlite:example.sqlite3');
+		$db = new PDO('sqlite:example.sqlite3',"","", array(PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION));
 		$ret = find_user_id($db, $email);
-		if (count($ret) != 0){
+		if (count($ret) != 0 && empty($_REQUEST['insert'])){
 			echo ($ret[0]['user_id']);
 		} else {
 			$sql = $db->prepare("insert into users (email, username, phone) values (:email, :email, :phone);");
 			if (!$sql) {
-				echo ($pdo->errorInfo());
+				echo ($db->errorInfo());
 			}
 			$sql->execute(array(':email' => $email, ':phone' => $phone));
 			$ret = find_user_id($db, $email);
