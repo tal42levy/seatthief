@@ -4,14 +4,18 @@ if (empty($_REQUEST['username'])){
 }
 try {
 	session_start();
-	if ( time() - $_SESSION['time_failed'] > 600){
-		session_unset();
-		session_destroy();
-		session_start();
+	if (isset($_SESSION['time_failed'])){
+		if ( time() - $_SESSION['time_failed'] > 600){
+			session_unset();
+			session_destroy();
+			session_start();
+		}
 	}
-	if ($_SESSION['num_attempts'] >= 5){
-		echo -1;
-		exit();
+	if (isset($_SESSION['num_attempts'])){
+		if ($_SESSION['num_attempts'] >= 5){
+			echo -1;
+			exit();
+		}
 	}
 	$db = new PDO('sqlite:example.sqlite3');
 	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);

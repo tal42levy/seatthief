@@ -11,7 +11,9 @@
 	<body>
 		<?php 
 			error_reporting(E_ALL);
-			session_start();
+			if (session_id() ==''){
+				session_start();
+			}
 			if (!$_SESSION['is_admin']){    ?>
 				<script type="text/javascript"> window.location="index.php";</script>
 			<?php

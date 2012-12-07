@@ -13,6 +13,8 @@
 			if (!empty($_SESSION['user_id'])){
 				session_destroy();
 				$flag = 1;
+			} else {
+				$flag = 0;
 			}
 			include "header.php";
 			if ($flag){

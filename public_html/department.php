@@ -44,15 +44,13 @@
 	}
 
 	$sql = "SELECT
-							d.name, d.code as Department , d.id as d_id, 
-							c.code as Code, c.title as Title, c.units, c.id as c_id,
-							s.code as section, s.id as s_id, s.days, s.start, s.end, s.sect, s.reg as num_registered, s.seats as total_seats, s.instructor_ids, s.loc as Location
+							d.name, d.code as Department , d.id as d_id,
+							 c.code as Code, c.id as c_id, c.title as Title, c.units , c.desc, c.id asc_id
 						FROM  sections s, courses c, departments d
 						WHERE
 						  c.id = s.course_id
-							AND d.id = c.department_id AND c.id = :id";
+							AND d.id = c.department_id AND d.id = :id";
  	$db = new PDO('sqlite:pyclasser/example.sqlite3');
-			
 	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);	
 	$results = $db->prepare($sql);
 	$results->bindParam(':id', intval($_REQUEST['id']), PDO::PARAM_INT);
@@ -61,28 +59,20 @@
 	<div class="hero-unit">
 			<table border="1" class="table">
 			<tr>
-				<th>Section</th><th>Units</th><th>Registered</th><th>Seats</th><th>Location</th><th>Days</th><th>Start</th><th>End</th>
+				<th>Course code</th><th>Units</th><th>Title</th><th>Description</th>
 			</tr>
 			<?php
 				$rows = $results->fetchAll();
-				echo "<h3>Sections</h3><p>Displaying all sections for <a href='department.php?id=". $rows[0]['d_id'] . "'>" . $rows[0]['Department'] . "</a> <a href='course.php?id=". $rows[0]['c_id']. "'>". $rows[0]['Code'] . ": " . $rows[0]['Title'] . "</a>";
+				echo "<h3>Sections</h3><p>Displaying all sections for " . $rows[0]['Department'] . " ". $rows[0]['Code']. ": " . $rows[0]['Title'];
 				foreach ($rows as $currentrow){
 					echo "<tr>";
-					$res = $currentrow["section"];
-					echo "<td>" . $res . "</td>";
+					$res = $currentrow["Code"];
+					echo "<td><a href=course.php?id=" . $currentrow["c_id"] . ">"  . $res . "</a></td>";
 					$res = $currentrow["units"];
 					echo "<td>" . $res . "</td>";
-					$res = $currentrow["num_registered"];
+					$res = $currentrow["Title"];
 					echo "<td>" . $res . "</td>";
-					$res = $currentrow["total_seats"];
-					echo "<td>" . $res . "</td>";
-					$res = $currentrow["Location"];
-					echo "<td>" . $res . "</td>";
-					$res = $currentrow["days"];
-					echo "<td>" . $res . "</td>";
-					$res = $currentrow["start"];
-					echo "<td>" . $res . "</td>";
-					$res = $currentrow["end"];
+					$res = $currentrow["desc"];
 					echo "<td>" . $res . "</td>";
 					echo "</tr>";
 				}
@@ -91,3 +81,4 @@
 		</div>
 	</body>
 </html>	
+

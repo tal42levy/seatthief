@@ -41,7 +41,6 @@ $(document).ready(function(){
 		var sec = $("#sects option:selected").attr("value");
 		$.post("pyclasser/formselects.php", {department: department, course:course, dataType:"json"}, function(courses){
 			var coursearray = $.parseJSON(courses);
-			console.log(coursearray);
 			$("#sects").find("option").remove().end().append('<option value="0">Section</option>').val("0");
 			for (var i = 0; i < coursearray.length; i++){
 				if (course != 0){
@@ -75,6 +74,7 @@ $(document).ready(function(){
 		} else {
 			var user = 0;
 			$.post("pyclasser/submit.php", {email: email, phone: phone}, function(ret){
+				console.log(ret);
 				user = parseInt(ret);
 				if (sec != 0 && user) {
 					$.post("pyclasser/submit.php", {department: department, course: course, section: sec, user:user}, function(retval){
